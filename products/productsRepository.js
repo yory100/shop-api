@@ -21,29 +21,46 @@ module.exports = function productsRepository(db) {
     const params = Object.values(data);
  
     return new Promise((resolve, reject) => {
-      db.run(insertProductQuery, params, (err, d) => {
+      db.run(insertProductQuery, params, (err) => {
         if (err) reject(err);
-       console.log(d)
+
         resolve();
       })
     });
   }
-
-  
+ 
   function update(data, id) {
-    const columns = Object.keys(data);
-    const params = Object.values(data).filter(d => d !== undefined);
+    const columns = Object.keys(data).filter(c => data[c]);
+    const params = Object.values(data).filter(p => p);
+
+    const updateColumns = columns.map((col, i) => {
+      return i !== (columns.length - 1) ? `${col}=?,` : `${col}=?`;
+    }).join(" ");
+
+    console.log(updateColumns)
 
     const query = `
       UPDATE products
-      SET name = ?, category = ?, price = ?
+      SET ${updateColumns}
       WHERE id = ${id};
     `;
  
     return new Promise((resolve, reject) => {
       db.run(query, params, (err) => {
         if (err) reject(err);
-        console.log(query, params)
+
+        resolve();
+      })
+    });
+  }
+
+  function remove(id) {
+    const query = `DELETE FROM products WHERE id=?`
+
+    return new Promise((resolve, reject) => {
+      db.run(query, id, (err) => {
+        if (err) reject(err);
+
         resolve();
       })
     });
@@ -52,7 +69,8 @@ module.exports = function productsRepository(db) {
   return {
     getList,
     create,
-    update
+    update,
+    remove
   }
   
 }
