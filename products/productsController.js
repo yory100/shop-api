@@ -16,15 +16,15 @@ module.exports = function productsController(productsRepository) {
 
   async function create(req, res) {
     try {
-      const body = req.body;
+      const { name, category, price } = req.body;
 
-      if (!body.name || !body.category)
+      if (!name || !category)
         catchError(res, "Product name and category are mandatory");
 
       const data = {
-        name: body.name,
-        category: body.category,
-        price: body.price,
+        name: name,
+        category: category,
+        price: price,
       };
 
       const poduct = await productsRepository.create(data);
@@ -43,12 +43,12 @@ module.exports = function productsController(productsRepository) {
   async function update(req, res) {
     try {
       const productId = req.params.id;
-      const body = req.body;
+      const { name, category, price } = req.body;
 
       const data = {
-        name: body.name,
-        category: body.category,
-        price: body.price,
+        name: name,
+        category: category,
+        price: price,
       };
 
       await productsRepository.update(data, productId);
@@ -62,10 +62,23 @@ module.exports = function productsController(productsRepository) {
     }
   }
 
+  async function remove(req, res) {
+    try {
+      const productId = req.params.id;
+
+      await productsRepository.remove(productId);
+
+      res.status(204).end();
+    } catch (error) {
+      catchError(res, error);
+    }
+  }
+
   return {
     getList,
     create,
-    update
+    update,
+    remove
   };
   
 }
