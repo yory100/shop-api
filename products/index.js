@@ -1,8 +1,8 @@
-// const db = require('../lib/dbConnection');
+const db = require('../lib/dbConnection');
 
 module.exports = function () {
-  // const productsRepository = new (require('./productsController'))(db);
-  const productsController = new (require('./productsController'))();
+  const productsRepository = require('./productsRepository')(db);
+  const productsController = require('./productsController')(productsRepository);
 
   return require('./productsRoutes')(productsController);
 }

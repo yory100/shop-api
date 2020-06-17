@@ -20,10 +20,17 @@ app.use(function (req, res, next) {
 app.set('jwtTokenSecret', 'add-yours-here');
 
 global.catchError = function catchError(res, err, opt) {
-  const source = opt ? opt.source : null;
   const errorCode = opt && opt.code ? opt.code : 400;
   res.status(errorCode).json({ success: false, msg: err });
 };
+
+app.use(function (err, req, res, next) {
+  res.status(err.status || 500);
+  res.render('error', {
+    message: err.message,
+    error: {}
+  });
+});
 
 app.listen(config.port, function () {
   console.log(`App listening on port ${config.port}!`);
