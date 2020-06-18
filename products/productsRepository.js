@@ -4,7 +4,7 @@ module.exports = function productsRepository(db) {
 
   function getList() {
     return new Promise((resolve, reject) => {
-      db.all(selectProductsQuery, [], (err, row) => {
+      db.all(selectProductsQuery, [], function (err, row) {
         if (err) reject(err);
   
         resolve(row);
@@ -21,10 +21,10 @@ module.exports = function productsRepository(db) {
     const params = Object.values(data);
  
     return new Promise((resolve, reject) => {
-      db.run(insertProductQuery, params, (err) => {
+      db.run(insertProductQuery, params, function (err) {
         if (err) reject(err);
-
-        resolve();
+        
+        resolve(this.lastID);
       })
     });
   }
@@ -37,8 +37,6 @@ module.exports = function productsRepository(db) {
       return i !== (columns.length - 1) ? `${col}=?,` : `${col}=?`;
     }).join(" ");
 
-    console.log(updateColumns)
-
     const query = `
       UPDATE products
       SET ${updateColumns}
@@ -46,9 +44,9 @@ module.exports = function productsRepository(db) {
     `;
  
     return new Promise((resolve, reject) => {
-      db.run(query, params, (err) => {
+      db.run(query, params, function (err) {
         if (err) reject(err);
-
+        console.log(this)
         resolve();
       })
     });
@@ -58,9 +56,9 @@ module.exports = function productsRepository(db) {
     const query = `DELETE FROM products WHERE id=?`
 
     return new Promise((resolve, reject) => {
-      db.run(query, id, (err) => {
+      db.run(query, id, function (err) {
         if (err) reject(err);
-
+        console.log(this)
         resolve();
       })
     });

@@ -27,11 +27,10 @@ module.exports = function productsController(productsRepository) {
         price: price,
       };
 
-      const poduct = await productsRepository.create(data);
-
-      console.log(poduct)
+      const poductId = await productsRepository.create(data);
 
       res.status(201).json({
+        poductId,
         success: true
       });
 
