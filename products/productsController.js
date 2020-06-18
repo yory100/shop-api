@@ -1,4 +1,3 @@
-'use strict'
 module.exports = function productsController(productsRepository) {
 
   async function getList(req, res) {
