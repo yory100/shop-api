@@ -1,12 +1,23 @@
 'use strict'
 const express = require('express');
 const bodyParser = require('body-parser');
+const unless = require('express-unless');
 const config = require('./config');
+const auth = require('./users/jwtAuth');
 
 const app = module.exports = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+
+app.set('jwtTokenSecret', 'secret');
+
+app.use(auth().unless({
+    path: [
+      { url: '/apiv1/products', methods: ['GET']  },
+      { url: '/apiv1/users/login', methods: ['POST']  }
+    ]})
+);
 
 require('./routes')(app);
 
