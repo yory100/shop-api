@@ -10,6 +10,10 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 require('./routes')(app);
 
+app.get('*', function (req, res, next) {
+  next();
+});
+
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   var err = new Error('Not Found');
@@ -26,10 +30,7 @@ global.catchError = function catchError(res, err, opt) {
 
 app.use(function (err, req, res, next) {
   res.status(err.status || 500);
-  res.render('error', {
-    message: err.message,
-    error: {}
-  });
+  res.json({ success: false, msg: err });
 });
 
 app.listen(config.port, function () {
