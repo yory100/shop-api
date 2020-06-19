@@ -8,5 +8,8 @@ module.exports = function (app) {
   const products = require('../products')();
   router.use(config.apiPrefix + '/products', products);
 
+  const orders = require('../orders')();
+  router.use(config.apiPrefix + '/orders', orders);
+
   return router;
 };

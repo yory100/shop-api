@@ -1,6 +1,6 @@
 module.exports = function productsRepository(db) {
 
-  const selectProductsQuery = `SELECT * FROM  products`
+  const selectProductsQuery = `SELECT * FROM  products`;
 
   function getList() {
     return new Promise((resolve, reject) => {
