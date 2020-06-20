@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "startDev": "nodemon --inspect app.js"
+    "dev": "nodemon --inspect app.js"
   },
   "keywords": [],
   "author": "",
