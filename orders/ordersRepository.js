@@ -1,3 +1,5 @@
+const utils = require('../lib/utils');
+
 module.exports = function productsRepository(db)  {
 
   const selectOrdersQuery = `
@@ -14,15 +16,8 @@ module.exports = function productsRepository(db)  {
     return new Promise((resolve, reject) => {
       db.all(selectOrdersQuery, [], function (err, row) {
         if (err) reject(err);
-
-        const output = {};
-        row.map(order => {
-          output[order.id] 
-            ? output[order.id].products.push(order.products) 
-            : output[order.id] = { ...order, products: [order.products] }
-        });
         
-        resolve(Object.values(output));
+        resolve(utils.fromatOrdersList(row));
       })
     })
   }
@@ -38,9 +33,7 @@ module.exports = function productsRepository(db)  {
       VALUES (?);
     `;
 
-    const updateValues = data.products.map((p, i) => {
-      return i !== (data.products.length - 1) ? '(?, ?),' : '(?, ?)';
-    }).join(" ");
+    const updateValues = utils.placeholdersOrdersCreate(data.products)
 
     const insertOrdersHasProductsQuery = `
       INSERT INTO orders_has_products (order_id, product_id)
@@ -52,17 +45,15 @@ module.exports = function productsRepository(db)  {
       db.get(selectStatusIDQuery, [], function(err, row) {
         if (err) reject(err); 
 
-        let values = {};
-        row ? values.orderID = row.id : reject('No such status.');
+        let orderID = {};
+        row ? orderID = row.id : reject('No such status.');
         // Create order
-        db.run(insertOrdersQuery, [values.orderID], function (err) {
+        db.run(insertOrdersQuery, [orderID], function (err) {
           if (err) reject(err);
 
-          values.productsInOrder = data.products
-                                    .map(p => [this.lastID, p])
-                                    .flat();
+          const productsInOrder = utils.insertOrdersHasProducts(data.products, this.lastID)
           // Link created order with products
-          db.run(insertOrdersHasProductsQuery, values.productsInOrder, function(err) {
+          db.run(insertOrdersHasProductsQuery, productsInOrder, function(err) {
             if (err) reject(err);
   
             resolve(this.changes);

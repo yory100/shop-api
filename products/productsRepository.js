@@ -1,3 +1,5 @@
+const utils = require('../lib/utils');
+
 module.exports = function productsRepository(db) {
 
   const selectProductsQuery = `SELECT * FROM  products`;
@@ -33,9 +35,7 @@ module.exports = function productsRepository(db) {
     const columns = Object.keys(data).filter(c => data[c]);
     const params = Object.values(data).filter(p => p);
 
-    const updateColumns = columns.map((col, i) => {
-      return i !== (columns.length - 1) ? `${col}=?,` : `${col}=?`;
-    }).join(" ");
+    const updateColumns = utils.placeholdersProductsUpdate(columns);
 
     const query = `
       UPDATE products
@@ -46,7 +46,7 @@ module.exports = function productsRepository(db) {
     return new Promise((resolve, reject) => {
       db.run(query, params, function (err) {
         if (err) reject(err);
-        console.log(this)
+        
         resolve();
       })
     });

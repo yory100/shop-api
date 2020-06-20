@@ -1,3 +1,4 @@
+const utils = require('../lib/utils');
 module.exports = function productsController(productsRepository) {
 
   async function getList(req, res) {
@@ -7,13 +8,10 @@ module.exports = function productsController(productsRepository) {
       const products = await productsRepository.getList();
 
       if (req.user) {
-        vat = await require('../services/vat.service')(req.user.cc)
+        vat = await require('../services/vatService')(req.user.cc)
         vat 
-         ? payload = products.map(p => {
-            p.price *= vat;
-            return p;
-          })
-         : payload = products;
+          ? payload = utils.mapProductsVat(products, vat)
+          : payload = products;
       } else {
         payload = products;
       }

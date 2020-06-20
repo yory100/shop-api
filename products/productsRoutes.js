@@ -6,5 +6,5 @@ module.exports = (Controller) => {
   router.put('/:id', Controller.update);
   router.delete('/:id', Controller.remove);
 
-    return router;
+  return router;
 };
