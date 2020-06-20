@@ -13,11 +13,12 @@ Routes
 
   # /products POST
   needs token
-        name and category mandatory
-        price optional
+    name and category mandatory
+    price optional
   
   # /products/:id PUT
   needs token
+    name, category or price - at least on
 
   # /products/:id DELETE
   needs token
@@ -27,8 +28,8 @@ Routes
 
   # /orders POST
   needs token
-        status - Pending, Processing, Delivered or Cancelled - mandatory
-        products array of products id - mandatory
+    status - Pending, Processing, Delivered or Cancelled - mandatory
+    products array of products id - mandatory
   
   # /orders/:id PUT
   needs token
