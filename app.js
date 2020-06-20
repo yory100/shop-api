@@ -1,4 +1,3 @@
-'use strict'
 const express = require('express');
 const bodyParser = require('body-parser');
 const config = require('./config');
@@ -11,7 +10,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.set('jwtTokenSecret', 'secret');
 
-app.use(auth({
+app.use(auth().skip({
     path: [
       { url: '/apiv1/products', methods: ['GET'], user: true  },
       { url: '/apiv1/users/login', methods: ['POST']  }
