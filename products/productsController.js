@@ -2,10 +2,25 @@ module.exports = function productsController(productsRepository) {
 
   async function getList(req, res) {
     try {
+      let vat;
+      let payload
       const products = await productsRepository.getList();
 
+      if (req.user) {
+        vat = await require('../services/vat.service')(req.user.cc)
+        vat 
+         ? payload = products.map(p => {
+            p.price *= vat;
+            return p;
+          })
+         : payload = products;
+      } else {
+        payload = products;
+      }
+
       res.json({
-        payload: products
+        payload,
+        success: true
       });
 
     } catch (error) {
