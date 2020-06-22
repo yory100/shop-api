@@ -5,7 +5,7 @@ Base url
 Routes
   # /users/login POST
   no token
-    username - sbtech, hard coded username - mandatory
+    username - sbtech, hard-coded username - mandatory
     password - password123, hardcoded password - mandatory
 
   # /products GET
