@@ -31,7 +31,7 @@ module.exports = function () {
         catchError(res, "Not authorized", { code: 401 });
       }
     } else {
-      res.status(400).json({
+      res.status(401).json({
         success: false,
         msg: 'No token provided'
       });
